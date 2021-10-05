@@ -14,12 +14,9 @@ namespace CSharpSqlTutorial
             connection.Open();
 
             var majorsCtrl = new MajorsController(connection);
-            var major = majorsCtrl.GetByPk(7);
-            
+            var major = majorsCtrl.GetByPk(1);          
             Console.WriteLine(major);
-            var major2 = majorsCtrl.GetByPk(123123);
-            Console.WriteLine(major2);
-            major.Description = "General Studies";
+            major.Description = "General Business";
             var rowsAffected = majorsCtrl.Change(major);
             if(rowsAffected != 1)
                 Console.WriteLine("Update failed!");
@@ -35,11 +32,11 @@ namespace CSharpSqlTutorial
             //if (rowsAffected != 1)
             //    Console.WriteLine("create failed!");
 
-            var keyId = 9;
-            if (majorsCtrl.GetByPk(keyId) != null)
-                rowsAffected = majorsCtrl.Remove(keyId);
-            else
-                Console.WriteLine("Delete Failed");
+            //var keyId = 9;
+            //if (majorsCtrl.GetByPk(keyId) != null)
+            //    rowsAffected = majorsCtrl.Remove(keyId);
+            //else
+            //    Console.WriteLine("Delete Failed");
             var MajorsAll = majorsCtrl.GetAll();
             foreach (var line in MajorsAll)
                 Console.WriteLine(line);

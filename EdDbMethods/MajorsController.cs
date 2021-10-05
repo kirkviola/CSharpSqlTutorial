@@ -33,11 +33,16 @@ namespace EdDbLib
             //        $" {major.MinSAT} = {change}";
 
             var sql = "UPDATE Major SET " +
-                    $" Code = '{major.Code}', " +
-                    $" Description = '{major.Description}', " +
-                    $" MinSAT = {major.MinSAT} " +
-                    $" Where Id = {major.Id};";
+                    $" Code = @Code, " +
+                    $" Description = @Description, " +
+                    $" MinSAT = @MinSAT " +
+                    $" Where Id = @Id;";
             var cmd = new SqlCommand(sql, sqlConn);
+            cmd.Parameters.AddWithValue("@Code", major.Code);
+            cmd.Parameters.AddWithValue("@Description", major.Description);
+            cmd.Parameters.AddWithValue("@MinSAT", major.MinSAT);
+            cmd.Parameters.AddWithValue("@Id", major.Id);
+
             var rowsAffected = cmd.ExecuteNonQuery();
             return rowsAffected;
         }
@@ -74,8 +79,10 @@ namespace EdDbLib
 
         public Major? GetByPk(int Id)
         {
-            var sql = $"Select * from Major where Id = {Id};";
-            var cmd = new SqlCommand(sql, sqlConn);
+            var sql = $"Select * from Major where Id = @Id;";
+            var cmd = new SqlCommand(sql, sqlConn); // adding param to cmd object
+            cmd.Parameters.AddWithValue("@Id", Id); // String name of param, value assigned
+
             var reader = cmd.ExecuteReader();
             if (!reader.HasRows)
             {
