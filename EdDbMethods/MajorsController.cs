@@ -14,6 +14,34 @@ namespace EdDbLib
         {
             this.sqlConn = sqlConnection.sqlConnection;
         }
+        public int Remove(int key)
+        {
+            var sql = "Delete from Major " +
+                    $" where Id = {key}";
+            var cmd = new SqlCommand(sql, sqlConn);
+            var rowsAffected = cmd.ExecuteNonQuery();
+            return rowsAffected;
+        }
+        public int Change(Major major)
+        {
+
+            //var sql = where
+            //    ? " UPDATE Major SET " +
+            //        $" {major.MinSAT} = {change}  " +
+            //        $" {whereClause}"
+            //    : " UPDATE Major SET " +
+            //        $" {major.MinSAT} = {change}";
+
+            var sql = "UPDATE Major SET " +
+                    $" Code = '{major.Code}', " +
+                    $" Description = '{major.Description}', " +
+                    $" MinSAT = {major.MinSAT} " +
+                    $" Where Id = {major.Id};";
+            var cmd = new SqlCommand(sql, sqlConn);
+            var rowsAffected = cmd.ExecuteNonQuery();
+            return rowsAffected;
+        }
+
         public int Create(Major major)
         {
             var sql = " INSERT Major (Code, Description, MinSAT) " +
@@ -46,8 +74,6 @@ namespace EdDbLib
 
         public Major? GetByPk(int Id)
         {
-            
-
             var sql = $"Select * from Major where Id = {Id};";
             var cmd = new SqlCommand(sql, sqlConn);
             var reader = cmd.ExecuteReader();
@@ -67,6 +93,44 @@ namespace EdDbLib
             reader.Close();
             return major;
         }
-    }
+        public Major? GetByCode(string Code)
+        {
+            var sql = "Select * From Major " +
+                    $" where Code = {Code} ";
+            var cmd = new SqlCommand(sql, sqlConn);
+            var reader = cmd.ExecuteReader();
+            if (!reader.HasRows)
+            {
+                reader.Close();
+                return null;
+            }
+            reader.Read();
+            var major = new Major()
+            {
+                Id = Convert.ToInt32(reader["Id"]),
+                Code = reader["Code"].ToString(),
+                Description = reader["Description"].ToString(),
+                MinSAT = Convert.ToInt32(reader["minSAT"])
+            };
+            reader.Close();
+            return major;
+        }
+        //public int CustomChange(List<Major> majorList)
+        //{
+        //    var sql = "";
+            
+        //    foreach(var major in majorList)
+        //    {
+        //        var sql = "Update Major Set " +
+        //                $" Code = '{major.Code}', " +
+        //                $" Description = '{major.Description}' " +
+        //                $" MinSAT = {major.MinSAT} " +
+        //                $" Where Id = {major.Id}";
+        //        var cmd = new SqlCommand(sql, sqlConn);
+               
+        //    }
+        //    var rowsAffected = cmd.
+        //}
+    }        
 
 }
